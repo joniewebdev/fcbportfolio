@@ -73,25 +73,55 @@ window.onload = function () {
     setGame();
 }
 
+function noMovement(previous, current) {
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+            if (previous[r][c] !== current[r][c]) {
+                console.log("may movement");
+                return false;
+            }
+        }
+    }
+    console.log("no movement");
+    return true;
+}
+
 function handleSlide(e) {
     console.log(e.code);
 
+    let previousTile = board.map(row => row.slice());
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "KeyW", "KeyS", "KeyA", "KeyD"].includes(e.code)) {
         if (e.code == "ArrowLeft" || e.code == "KeyA") {
             slideLeft();
-            setTwo();
+            let currentTile = board.map(row => row.slice());
+            if (noMovement(previousTile, currentTile) == false) {
+                console.log("set two");
+                setTwo();
+            }
         }
         else if (e.code == "ArrowRight" || e.code == "KeyD") {
             slideRight();
-            setTwo();
+            let currentTile = board.map(row => row.slice());
+            if (noMovement(previousTile, currentTile) == false) {
+                console.log("set two");
+                setTwo();
+            }
         }
         else if (e.code == "ArrowUp" || e.code == "KeyW") {
             slideUp();
-            setTwo();
+            let currentTile = board.map(row => row.slice());
+            if (noMovement(previousTile, currentTile) == false) {
+                console.log("set two");
+                setTwo();
+            }
         }
         else if (e.code == "ArrowDown" || e.code == "KeyS") {
             slideDown();
-            setTwo();
+            let currentTile = board.map(row => row.slice());
+            if (noMovement(previousTile, currentTile) == false) {
+                console.log("set two");
+                setTwo();
+            }
         }
     }
 
@@ -116,9 +146,10 @@ function filterZero(arr) {
     return arr.filter(num => num != 0);
 }
 
-function slide(arr) {
-    arr = filterZero(arr);
-    for (let i = 0; i < arr.length - 1; i++) {
+function slide(arr) { //eto yung cause ng problema sa animation
+    arr = filterZero(arr); //remove zeros
+
+    for (let i = 0; i < arr.length - 1; i++) { //combine
         if (arr[i] == arr[i + 1]) {
             arr[i] *= 2;
             arr[i + 1] = 0;
@@ -129,10 +160,10 @@ function slide(arr) {
 
     arr = filterZero(arr);
 
-    while (arr.length < columns) { //add zero
+    while (arr.length < 4) { //add zero
         arr.push(0);
     }
-    return arr;
+    return arr; //final position
 }
 
 function slideLeft() {
@@ -277,12 +308,29 @@ function setTwo() {
         let r = Math.floor(Math.random() * rows);
         let c = Math.floor(Math.random() * columns);
 
+        let chance = Math.random();
         if (board[r][c] == 0) {
             // Generate new tile 
-            board[r][c] = 2;
-            let tile = document.getElementById(r.toString() + "-" + c.toString());
-            tile.innerText = "2";
-            tile.classList.add("x2");
+            if (chance < 0.9) {
+                board[r][c] = 2;
+                let tile = document.getElementById(r.toString() + "-" + c.toString());
+                tile.innerText = "2";
+                tile.classList.add("x2");
+                tile.style.animation = "zoom-in-two 0.3s";
+                setTimeout(() => {
+                    tile.style.animation = "";
+                }, 300);
+            }
+            else {
+                board[r][c] = 4;
+                let tile = document.getElementById(r.toString() + "-" + c.toString());
+                tile.innerText = "4";
+                tile.classList.add("x4");
+                tile.style.animation = "zoom-in-two 0.3s";
+                setTimeout(() => {
+                    tile.style.animation = "";
+                }, 300);
+            }
             found = true;
         }
     }
@@ -383,18 +431,18 @@ document.addEventListener('touchend', (e) => {
             setTwo(); // Call a function named "setTwo"
         }
     }
-    
+
     document.getElementById("score").innerText = score;
 
-	checkWin();
+    checkWin();
 
-	// Call hasLost() to check for game over conditions
-	if (hasLost()) {
-	    // Use setTimeout to delay the alert
-	    setTimeout(() => {
-	    alert("Game Over! You have lost the game. Game will restart");
-	    restartGame();
-	    alert("Click any key to restart");
-	    }, 100); 
-	}
+    // Call hasLost() to check for game over conditions
+    if (hasLost()) {
+        // Use setTimeout to delay the alert
+        setTimeout(() => {
+            alert("Game Over! You have lost the game. Game will restart");
+            restartGame();
+            alert("Click any key to restart");
+        }, 100);
+    }
 });
