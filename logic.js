@@ -411,24 +411,41 @@ document.addEventListener('touchend', (e) => {
     let diffX = startX - e.changedTouches[0].clientX;
     let diffY = startY - e.changedTouches[0].clientY;
 
+    let previousTile = board.map(row => row.slice());
     if (Math.abs(diffX) > Math.abs(diffY)) {
         // Horizontal swipe
         if (diffX > 0) {
             slideLeft(); // Call a function for sliding left
-            setTwo(); // Call a function named "setTwo"
+            let currentTile = board.map(row => row.slice());
+            if (noMovement(previousTile, currentTile) == false) {
+                console.log("set two");
+                setTwo();
+            }
         } else {
             slideRight(); // Call a function for sliding right
-            setTwo(); // Call a function named "setTwo"
+            let currentTile = board.map(row => row.slice());
+            if (noMovement(previousTile, currentTile) == false) {
+                console.log("set two");
+                setTwo();
+            }
         }
     }
     else {
         // Vertical swipe
         if (diffY > 0) {
             slideUp(); // Call a function for sliding up
-            setTwo(); // Call a function named "setTwo"
+            let currentTile = board.map(row => row.slice());
+            if (noMovement(previousTile, currentTile) == false) {
+                console.log("set two");
+                setTwo();
+            }
         } else {
             slideDown(); // Call a function for sliding down
-            setTwo(); // Call a function named "setTwo"
+            let currentTile = board.map(row => row.slice());
+            if (noMovement(previousTile, currentTile) == false) {
+                console.log("set two");
+                setTwo();
+            }
         }
     }
 
